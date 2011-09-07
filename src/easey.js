@@ -13,8 +13,9 @@
     };
 
     easey.sequence = function(map, steps) {
+        function noop() {}
         for (var i = 0; i < (steps.length - 1); i++) {
-            var c = steps[i].callback || function() {};
+            var c = steps[i].callback || noop;
             steps[i].callback = (function(j, ca) {
                 return function() {
                     if (ca) ca();
@@ -75,6 +76,8 @@
                     (a.row * (1 - t)) +    (b.row * t),
                     (a.column * (1 - t)) + (b.column * t),
                     tz);
+            } else if (options.zoom) {
+                map.setZoom(tz);
             }
             map.draw();
         }, 1);
