@@ -36,6 +36,7 @@
         var start = (+new Date()),
             startZoom = map.getZoom(),
             startCenter = map.getCenter(),
+            startExtent = map.getExtent(),
             startCoordinate = map.coordinate.copy();
 
         if (typeof options === 'number') {
@@ -59,7 +60,7 @@
             // use shift-double-click to zoom out
             var delta = (+new Date()) - start;
             if (delta > time) {
-                map.setZoom(z);
+                if (!options.extent) map.setZoom(z);
                 window.clearInterval(i);
                 return callback();
             }
@@ -78,7 +79,13 @@
                     tz);
             } else if (options.zoom) {
                 map.setZoom(tz);
+            } else if (options.extent) {
+                map.setExtent([
+                    MM.Location.interpolate(startExtent[1], options.extent[1], t),
+                    MM.Location.interpolate(startExtent[0], options.extent[0], t)
+                ]);
             }
+
             map.draw();
         }, 1);
     };
